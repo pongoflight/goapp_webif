@@ -17,7 +17,8 @@ func viewAjax(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(time.Now().Format(layout)))
 		}
 		if r.Form["act"][0] == "getrunstat" {
-			w.Write([]byte("{\"serverName\":\"SY\"}"))
+			stat := &Stat{Running: true, Uptime: time.Now().Format(layout)}
+			w.Write(stat.ToJson())
 		}
 	} else if r.Method == "POST" {
 

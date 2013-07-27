@@ -15,7 +15,7 @@
       <div class="masthead">
         <ul class="nav nav-pills pull-right">
           {{range .Navi}}
-            <li><a href="{{.Uri}}">{{.Title}}</a></li>
+          <li{{if .Active}} class="active"{{end}}><a href="{{.Uri}}">{{.Title}}</a></li>
           {{end}}
         </ul>
         <h3 class="muted">{{.PageTitle}}</h3>
@@ -33,9 +33,9 @@
         <thead>
           <tr><th>序号</th><th>状态名称</th><th>状态值</th></tr>
         </thead>
-          
-          <tr><td>${i}</td><td>${kv[0]}</td><td id="${kv[0]}"></td></tr>
-          
+          {{range $i,$v :=.Fields}}
+          <tr><td>{{$i}}</td><td>{{$v}}</td><td id="{{$v}}"></td></tr>
+          {{end}}
         <tbody>
 
         </tbody>
@@ -49,15 +49,14 @@
 
     </div>
 
-    <p id="result"></p>
+
     <script src="/static/js/jquery-1.9.1.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
       setTimeout(func = function () {
         $.ajax({
           url:"/ajax/?act=getrunstat&random="+Math.random(), type:"GET", dataType:"json", success: function(data) {
-            //$.each(data, function(k, v) {$('#'+k).text(v)});
-			$('#result').text(data.serverName);
+            $.each(data, function(k, v) {$('#'+k).text(v)});
           }
         });
 		setTimeout(func, 5000);

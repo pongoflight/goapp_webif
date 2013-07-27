@@ -3,20 +3,22 @@ package main
 
 import (
 	"fmt"
-	"html/template"
 	"net/http"
+	"text/template"
 )
 
 type RunstatPage struct {
 	Page
-	PageTitle string
+	Fields []string
 }
 
 func viewRunstat(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("runstat method:", r.Method, r.URL.Path, r.Form) //获取请求的方法
+	page := new(RunstatPage)
+	page.Initialize("运行状态")
+	page.Fields = []string{"Running", "Uptime"}
 	if r.Method == "GET" {
-		page := RunstatPage{Page: publicPage, PageTitle: "运行状态"}
 		t, _ := template.ParseFiles("template/runstat.html")
 		t.Execute(w, page)
 	} else if r.Method == "POST" {

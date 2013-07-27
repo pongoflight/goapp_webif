@@ -10,15 +10,16 @@ import (
 
 type LoginPage struct {
 	Page
-	PageTitle string
-	Failed    bool
+	Failed bool
 }
 
 func viewLogin(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	fmt.Println("login method:", r.Method, r.URL.Path, r.Form) //获取请求的方法
+	page := new(LoginPage)
+	page.Initialize("用户登录")
 	if r.Method == "GET" {
-		page := LoginPage{Page: publicPage, PageTitle: "用户登录", Failed: false}
+		page.Failed = false
 		t, _ := template.ParseFiles("template/login.html")
 		t.Execute(w, page)
 	} else if r.Method == "POST" {
@@ -32,12 +33,12 @@ func viewLogin(w http.ResponseWriter, r *http.Request) {
 			} else if form_pw[0] == auth_pw2 {
 				w.Write([]byte("S2"))
 			} else {
-				page := LoginPage{Page: publicPage, Failed: true}
+				page.Failed = true
 				t, _ := template.ParseFiles("template/login.html")
 				t.Execute(w, page)
 			}
 		} else {
-			page := LoginPage{Page: publicPage, Failed: true}
+			page.Failed = true
 			t, _ := template.ParseFiles("template/login.html")
 			t.Execute(w, page)
 		}
