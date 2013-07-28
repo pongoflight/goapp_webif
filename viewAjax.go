@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -17,8 +18,14 @@ func viewAjax(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(time.Now().Format(layout)))
 		}
 		if r.Form["act"][0] == "getrunstat" {
-			stat := &Stat{Running: true, Uptime: time.Now().Format(layout)}
-			w.Write(stat.ToJson())
+			count := gStatOptMgr.GetOptionCount()
+			options := make([]*Option, count)
+			for i := 0; i < count; i++ {
+				options[i] = gStatOptMgr.GetOptionByIndex(i)
+				//options[i].Value = time.Now().Format(layout)
+			}
+			buf, _ := json.Marshal(options)
+			w.Write(buf)
 		}
 	} else if r.Method == "POST" {
 

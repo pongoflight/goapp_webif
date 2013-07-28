@@ -9,7 +9,7 @@ import (
 
 type RunstatPage struct {
 	Page
-	Fields []string
+	Options []*Option
 }
 
 func viewRunstat(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,11 @@ func viewRunstat(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("runstat method:", r.Method, r.URL.Path, r.Form) //获取请求的方法
 	page := new(RunstatPage)
 	page.Initialize("运行状态")
-	page.Fields = []string{"Running", "Uptime"}
+	count := gStatOptMgr.GetOptionCount()
+	page.Options = make([]*Option, count)
+	for i := 0; i < count; i++ {
+		page.Options[i] = gStatOptMgr.GetOptionByIndex(i)
+	}
 	if r.Method == "GET" {
 		t, _ := template.ParseFiles("template/runstat.html")
 		t.Execute(w, page)

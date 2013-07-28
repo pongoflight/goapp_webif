@@ -18,7 +18,7 @@
           <li{{if .Active}} class="active"{{end}}><a href="{{.Uri}}">{{.Title}}</a></li>
           {{end}}
         </ul>
-        <h3 class="muted">{{.PageTitle}}</h3>
+        <h3 class="muted">{{.AppTitle}}</h3>
       </div>
 
       <hr>
@@ -31,10 +31,10 @@
 
       <table class="table table-stripe table-hover">
         <thead>
-          <tr><th>序号</th><th>状态名称</th><th>状态值</th></tr>
+          <tr><th>序号</th><th>分组</th><th>状态名称</th><th>状态值</th></tr>
         </thead>
-          {{range $i,$v :=.Fields}}
-          <tr><td>{{$i}}</td><td>{{$v}}</td><td id="{{$v}}"></td></tr>
+          {{range $i,$v :=.Options}}
+          <tr><td>{{$i}}</td><td>{{$v.Group}}</td><td>{{$v.Name}}</td><td id="{{$v.Token}}">{{$v.Value}}</td></tr>
           {{end}}
         <tbody>
 
@@ -56,7 +56,7 @@
       setTimeout(func = function () {
         $.ajax({
           url:"/ajax/?act=getrunstat&random="+Math.random(), type:"GET", dataType:"json", success: function(data) {
-            $.each(data, function(k, v) {$('#'+k).text(v)});
+            $.each(data, function(i, n) {$('#'+n.Token).text(n.Value)});
           }
         });
 		setTimeout(func, 5000);

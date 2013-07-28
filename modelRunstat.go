@@ -1,16 +1,11 @@
 // modelRunstat.go
 package main
 
-import (
-	"encoding/json"
-)
-
-type Stat struct {
-	Running bool
-	Uptime  string
-}
-
-func (r *Stat) ToJson() []byte {
-	buf, _ := json.Marshal(r)
-	return buf
+func InitlizeStatOptMgr() *OptionMgr {
+	statOptMgr := CreateOptionMgr(32)
+	statOptMgr.NewOption("root", "name", "Mike")
+	statOptMgr.NewOption("root", "age", "18")
+	statOptMgr.NewOption("root", "tall", "180")
+	go statOptMgr.OptionManagerServ()
+	return statOptMgr
 }

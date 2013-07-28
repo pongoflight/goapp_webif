@@ -39,11 +39,16 @@ func viewRoot(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/favicon.ico" {
 		outputFile(w, "static/favicon.ico")
 	} else {
-		http.Redirect(w, r, "/login/", 302)
+		http.Redirect(w, r, "/runstat/", 302)
 	}
 }
 
+var gStatOptMgr *OptionMgr
+
 func main() {
+	// 启动状态option读写服务
+	gStatOptMgr = InitlizeStatOptMgr()
+
 	http.Handle("/static/", http.FileServer(http.Dir("")))
 	http.HandleFunc("/login/", viewLogin)
 	http.HandleFunc("/ajax/", viewAjax)
