@@ -5,26 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strings"
 )
-
-func outputFile(w http.ResponseWriter, fileName string) {
-	fin, err := os.Open(fileName)
-	defer fin.Close()
-	if err != nil {
-		fmt.Println(fileName, err)
-		return
-	}
-	buf := make([]byte, 1024)
-	for {
-		n, _ := fin.Read(buf)
-		if 0 == n {
-			break
-		}
-		w.Write(buf[:n])
-	}
-}
 
 func viewRoot(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()       //解析参数，默认是不会解析的
@@ -36,11 +18,7 @@ func viewRoot(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("key:", k)
 		fmt.Println("val:", strings.Join(v, ""))
 	}
-	if r.URL.Path == "/favicon.ico" {
-		outputFile(w, "static/favicon.ico")
-	} else {
-		http.Redirect(w, r, "/runstat/", 302)
-	}
+	http.Redirect(w, r, "/runstat/", 302)
 }
 
 var gStatOptMgr *OptionMgr
