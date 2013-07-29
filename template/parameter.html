@@ -26,17 +26,18 @@
       
       <div class="jumbotron">
         <h1>{{.PageTitle}}</h1>
-        <p class="lead">实时察看设备运行状态。</p>
+        <p class="lead">配置设备运行参数。</p>
       
       <hr>
 
       <table class="table table-stripe table-hover">
         <thead>
-          <tr><th>序号</th><th>分组</th><th>状态名称</th><th>状态值</th></tr>
+          <tr><th>序号</th><th>分组</th><th>参数名称</th><th>参数值</th><th>修改</th></tr>
         </thead>
         <tbody>
 		  {{range $i,$v :=.Options}}
-          <tr><td>{{$i}}</td><td>{{$v.Group}}</td><td>{{$v.Name}}</td><td id="{{$v.Token}}">{{$v.Value}}</td></tr>
+          <tr><td>{{$i}}</td><td>{{$v.Group}}</td><td>{{$v.Name}}</td><td>{{$v.Value}}</td>
+		  <td><div class="input-append"><input type="text" class="input-medium" placeholder="{{$v.Value}}" /><button id="{{$v.Token}}" class="btn" type="button">修改参数</button></div></td></tr>
           {{end}}
         </tbody>
       </table>
@@ -53,14 +54,23 @@
     <script src="/static/js/jquery-1.9.1.min.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script>
-      setTimeout(func = function () {
-        $.ajax({
-          url:"/ajax/?act=getrunstat&random="+Math.random(), type:"GET", dataType:"json", success: function(data) {
-            $.each(data, function(i, n) {$('#'+n.Token).text(n.Value)});
-          }
-        });
-		setTimeout(func, 5000);
-      }, 100);
+	$('button.btn').click(function () {
+		var oid = $(this).attr("id");
+		var value = $(this).prev().val();
+		if (value != "") {
+			var post_data = { "oid":oid, "value":value };
+			$.ajax({
+		        url:"/ajax/?act=postparameter&random="+Math.random(), type:"POST", contentType:"application/x-www-form-urlencoded", data:post_data, success: function(msg) {
+					if (msg == "success") {
+						$('#'+oid).removeClass().addClass("btn btn-success").text("修改成功");
+					} else {
+						$('#'+oid).removeClass().addClass("btn btn-warning").text("修改失败");
+					}
+					
+		        }
+	        });
+		}
+	});
     </script>
   </body>
 </html>

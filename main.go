@@ -22,15 +22,18 @@ func viewRoot(w http.ResponseWriter, r *http.Request) {
 }
 
 var gStatOptMgr *OptionMgr
+var gParaOptMgr *OptionMgr
 
 func main() {
-	// 启动状态option读写服务
+	// 启动状态option读写服务，及参数option读写服务
 	gStatOptMgr = InitlizeStatOptMgr()
+	gParaOptMgr = InitlizeParaOptMgr()
 
 	http.Handle("/static/", http.FileServer(http.Dir("")))
 	http.HandleFunc("/login/", viewLogin)
 	http.HandleFunc("/ajax/", viewAjax)
 	http.HandleFunc("/runstat/", viewRunstat)
+	http.HandleFunc("/parameter/", viewParameter)
 	http.HandleFunc("/", viewRoot)
 	err := http.ListenAndServe(":9090", nil) //设置监听的端口
 	if err != nil {

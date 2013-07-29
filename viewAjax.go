@@ -27,7 +27,27 @@ func viewAjax(w http.ResponseWriter, r *http.Request) {
 			buf, _ := json.Marshal(options)
 			w.Write(buf)
 		}
+		if r.Form["act"][0] == "getparameter" {
+			count := gParaOptMgr.GetOptionCount()
+			options := make([]*Option, count)
+			for i := 0; i < count; i++ {
+				options[i] = gParaOptMgr.GetOptionByIndex(i)
+				options[i].Value = time.Now().Format(layout)
+			}
+			buf, _ := json.Marshal(options)
+			w.Write(buf)
+		}
 	} else if r.Method == "POST" {
+		if r.Form["act"][0] == "postparameter" {
+			option := gParaOptMgr.GetOptionByToken(r.Form["oid"][0])
+			option.Value = r.Form["value"][0]
+			option = gParaOptMgr.PutOption(option)
+			if option.Token == "" {
+				w.Write([]byte("fail"))
+			} else {
+				w.Write([]byte("success"))
+			}
 
+		}
 	}
 }

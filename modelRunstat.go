@@ -2,10 +2,10 @@
 package main
 
 func InitlizeStatOptMgr() *OptionMgr {
-	statOptMgr := CreateOptionMgr(32)
-	statOptMgr.NewOption("root", "name", "Mike")
-	statOptMgr.NewOption("root", "age", "18")
-	statOptMgr.NewOption("root", "tall", "180")
-	go statOptMgr.OptionManagerServ()
-	return statOptMgr
+	OptMgr := CreateOptionMgr(32)
+	OptMgr.NewOption("root", "name", "Mike")
+	OptMgr.NewOption("root", "age", "18")
+	OptMgr.NewOption("root", "tall", "180")
+	go OptMgr.OptionManagerServ()
+	return OptMgr
 }
